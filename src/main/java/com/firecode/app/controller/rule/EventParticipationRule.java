@@ -9,6 +9,8 @@ import com.firecode.app.model.repository.filter.RepositoryFilter;
 import com.firecode.app.model.service.EventParticipationService;
 import com.firecode.app.model.service.EmployeeService;
 import com.firecode.app.model.service.RateService;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -38,6 +40,7 @@ public class EventParticipationRule {
 
     public ResponseEntity<?> create(EventParticipationDto dto, HttpServletResponse response) {
 
+
         /* Verifica se o ID funcionario informado existe */
         EmployeeEntity employee = employeeService.findById(dto.getIdEmployee());
         if (employee == null) {
@@ -51,7 +54,7 @@ public class EventParticipationRule {
         }
 
         /* Verifica se a taxa do evento existe */
-        RateEntity rate = rateService.findById(dto.getIdRate());
+        RateEntity rate = rateService.findById(dto.getIdEmployeeRate());
         /* Se a taxa do evento nao for encontrada retorna um Bad Request */
         if (rate == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.rate.event.exist", null));
@@ -59,7 +62,7 @@ public class EventParticipationRule {
 
         /* Se a taxa do evento for encontrada mas, nao corresponde a taxa referente ao funcionario */
         if (rate != null) {
-            if (rate.isEmployee() == false) {
+            if (rate.getEmployee() == false) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.rate.event.employee.exist", null));
             }
         }
@@ -74,24 +77,18 @@ public class EventParticipationRule {
     }
 
     /* Exclui um funcionario do evento */
-    public ResponseEntity<?> deleteEventEmployee(int idEmployee) {
+    public ResponseEntity<?> delete(int id) {
 
-        System.out.println("idEmployee: " + idEmployee);
-
-        var employee = new EmployeeEntity(idEmployee);
-
-        /* Verifica se existe o funcionario na lista. Como na tabela EventParticipation so e permitido 1 registro
-        de funcionario, somente e necessario consultar o funcionario
-         */
-        var eventParticipation = eventParticipationService.findByIdEmployee(employee);
+        var eventParticipation = eventParticipationService.findById(id);
 
         if (eventParticipation == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.event.employee.exist", null));
         }
 
-        System.out.println("eventParticipation: " + eventParticipation.getId());
+        System.out.println("ID: " + eventParticipation.getId() + " - ID Employee: " + eventParticipation.getIdEmployee().getId());
 
-        eventParticipationService.delete(eventParticipation);
+        eventParticipationService.deleteById(eventParticipation.getId());
+
         return ResponseEntity.status(HttpStatus.OK).body(messageResponseRule.messageResponse(200, HttpStatus.OK, "message.success.delete", null));
     }
 
@@ -112,6 +109,36 @@ public class EventParticipationRule {
 
         return eventParticipationDto != null ? ResponseEntity.ok(eventParticipationDto) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponseRule.messageResponse(404, HttpStatus.NOT_FOUND, "message.error.not.found", null));
 
+    }
+
+    public ResponseEntity<?> totalCollected() {
+
+        var event = EventParticipationDto.totalCollected(eventParticipationService.findAll("id"));
+
+        return event != null ? ResponseEntity.ok(event) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponseRule.messageResponse(404, HttpStatus.NOT_FOUND, "message.error.not.found", null));
+
+    }
+
+    private boolean guestAnalyze(String nameGuest, String documentGuest, int idRate) {
+
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(1, nameGuest);
+        map.put(2, documentGuest);
+        map.put(3, String.valueOf(idRate));
+
+        int count = 0;
+
+        for (String s : map.values()) {
+            if (s == null || s.equals("")) {
+                count++;
+            }
+        }
+
+        if (count > 0 && count < 3) {
+            return false;
+        }
+
+        return true;
     }
 
 }

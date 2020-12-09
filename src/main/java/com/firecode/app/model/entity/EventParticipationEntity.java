@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "event_participation", catalog = "grupowl", schema = "", uniqueConstraints = {
@@ -30,28 +32,30 @@ public class EventParticipationEntity implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idEventParticipation")
-    private EventGuestEntity eventGuestEntity;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "filter", nullable = false, length = 2147483647)
+    private String filter;
 
-    @JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private EventEntity idEvent;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idEventParticipation" )
+    private EventGuestEntity eventGuestEntity;
 
     @JoinColumn(name = "id_employee", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false)
     private EmployeeEntity idEmployee;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idEventParticipation")
-    private RecipeEntity recipeEntity;
-
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "filter", nullable = false, length = 2147483647)
-    private String filter;
+    @JoinColumn(name = "id_event", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private EventEntity idEvent;
 
     @JoinColumn(name = "id_rate", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private RateEntity idRate;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "idEventParticipation")
+    private RecipeEntity recipeEntity;
 
     public EventParticipationEntity() {
     }
@@ -68,20 +72,20 @@ public class EventParticipationEntity implements Serializable {
         this.id = id;
     }
 
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
     public EventGuestEntity getEventGuestEntity() {
         return eventGuestEntity;
     }
 
     public void setEventGuestEntity(EventGuestEntity eventGuestEntity) {
         this.eventGuestEntity = eventGuestEntity;
-    }
-
-    public EventEntity getIdEvent() {
-        return idEvent;
-    }
-
-    public void setIdEvent(EventEntity idEvent) {
-        this.idEvent = idEvent;
     }
 
     public EmployeeEntity getIdEmployee() {
@@ -92,20 +96,12 @@ public class EventParticipationEntity implements Serializable {
         this.idEmployee = idEmployee;
     }
 
-    public RecipeEntity getRecipeEntity() {
-        return recipeEntity;
+    public EventEntity getIdEvent() {
+        return idEvent;
     }
 
-    public void setRecipeEntity(RecipeEntity recipeEntity) {
-        this.recipeEntity = recipeEntity;
-    }
-
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
+    public void setIdEvent(EventEntity idEvent) {
+        this.idEvent = idEvent;
     }
 
     public RateEntity getIdRate() {
@@ -114,6 +110,14 @@ public class EventParticipationEntity implements Serializable {
 
     public void setIdRate(RateEntity idRate) {
         this.idRate = idRate;
+    }
+
+    public RecipeEntity getRecipeEntity() {
+        return recipeEntity;
+    }
+
+    public void setRecipeEntity(RecipeEntity recipeEntity) {
+        this.recipeEntity = recipeEntity;
     }
 
     @Override

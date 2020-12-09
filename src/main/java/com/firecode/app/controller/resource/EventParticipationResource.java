@@ -72,7 +72,19 @@ public class EventParticipationResource {
     @PreAuthorize("hasAnyAuthority('ADMIN') and #oauth2.hasScope('write')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        return eventParticipationRule.deleteEventEmployee(id);
+        return eventParticipationRule.delete(id);
+    }
+
+    @ApiOperation(value = "Total Collected")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Returns List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 403, message = "Access Denied"),
+        @ApiResponse(code = 500, message = "Server Error"),})
+    @PreAuthorize("hasAnyAuthority('ADMIN') and #oauth2.hasScope('read')")
+    @GetMapping("/totalcollected")
+    public ResponseEntity<?> totalCollected() {
+        return eventParticipationRule.totalCollected();
     }
 
 }

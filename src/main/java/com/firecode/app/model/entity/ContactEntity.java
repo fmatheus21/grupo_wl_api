@@ -24,6 +24,7 @@ import javax.validation.constraints.Size;
 public class ContactEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -77,7 +78,7 @@ public class ContactEntity implements Serializable {
     }
 
     public void setPhone(String phone) {
-        this.phone = AppUtil.removeSpecialCharacters(phone);
+        this.phone = phone;
     }
 
     public PersonPhysicalEntity getIdPersonPhysical() {

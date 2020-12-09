@@ -1,7 +1,7 @@
 package com.firecode.app.model.entity;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -14,11 +14,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "event", catalog = "grupowl", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name_event"}),
     @UniqueConstraint(columnNames = {"id"})})
 
 public class EventEntity implements Serializable {
@@ -34,9 +36,11 @@ public class EventEntity implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "date_event", nullable = false)
-    private LocalDate dateEvent;
+    private LocalDateTime dateEvent;
 
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(name = "name_event", nullable = false, length = 50)
     private String nameEvent;
 
@@ -58,11 +62,11 @@ public class EventEntity implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDateEvent() {
+    public LocalDateTime getDateEvent() {
         return dateEvent;
     }
 
-    public void setDateEvent(LocalDate dateEvent) {
+    public void setDateEvent(LocalDateTime dateEvent) {
         this.dateEvent = dateEvent;
     }
 

@@ -44,10 +44,6 @@ public class EventParticipationDao implements GenericDao<EventParticipationEntit
         repository.deleteById(id);
     }
 
-    public void delete(EventParticipationEntity t) {
-        repository.delete(t);
-    }
-
     public Page<EventParticipationEntity> findAllPaginator(RepositoryFilter filter, Pageable pageable) {
         return repository.findAllPaginator(filter, pageable);
     }

@@ -1,5 +1,6 @@
 package com.firecode.app.model.entity;
 
+import com.firecode.app.controller.util.AppUtil;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -46,6 +48,10 @@ public class EventGuestEntity implements Serializable {
     @OneToOne(optional = false)
     private EventParticipationEntity idEventParticipation;
 
+    @JoinColumn(name = "id_rate", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private RateEntity idRate;
+
     public EventGuestEntity() {
     }
 
@@ -62,11 +68,14 @@ public class EventGuestEntity implements Serializable {
     }
 
     public String getNameGuest() {
+        if (nameGuest != null) {
+            return AppUtil.convertFirstUppercaseCharacter(nameGuest);
+        }
         return nameGuest;
     }
 
     public void setNameGuest(String nameGuest) {
-        this.nameGuest = nameGuest;
+        this.nameGuest = AppUtil.convertAllUppercaseCharacters(nameGuest);
     }
 
     public String getDocument() {
@@ -74,7 +83,7 @@ public class EventGuestEntity implements Serializable {
     }
 
     public void setDocument(String document) {
-        this.document = document;
+        this.document = AppUtil.removeSpecialCharacters(document);
     }
 
     public EventParticipationEntity getIdEventParticipation() {
@@ -83,6 +92,14 @@ public class EventGuestEntity implements Serializable {
 
     public void setIdEventParticipation(EventParticipationEntity idEventParticipation) {
         this.idEventParticipation = idEventParticipation;
+    }
+
+    public RateEntity getIdRate() {
+        return idRate;
+    }
+
+    public void setIdRate(RateEntity idRate) {
+        this.idRate = idRate;
     }
 
     @Override

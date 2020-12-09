@@ -43,7 +43,6 @@ public class PersonPhysicalEntity implements Serializable {
     @Size(min = 1, max = 70)
     @Column(name = "name", nullable = false, length = 70)
     private String name;
-
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "idPersonPhysical")
     private ContactEntity contactEntity;
 

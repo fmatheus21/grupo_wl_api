@@ -128,7 +128,10 @@ public class UserEntity implements Serializable {
             return false;
         }
         UserEntity other = (UserEntity) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override

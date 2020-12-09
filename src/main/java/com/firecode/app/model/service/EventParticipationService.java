@@ -5,6 +5,7 @@ import com.firecode.app.model.entity.EmployeeEntity;
 import com.firecode.app.model.entity.EventEntity;
 import com.firecode.app.model.repository.dao.EventParticipationDao;
 import com.firecode.app.model.repository.filter.RepositoryFilter;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +21,12 @@ public class EventParticipationService {
         return dao.create(t);
     }
 
-    public void delete(EventParticipationEntity t) {
-        dao.delete(t);
-    }
-
     public void deleteById(int id) {
         dao.deleteById(id);
+    }
+
+    public List<EventParticipationEntity> findAll(String orderBy) {
+        return dao.findAll(orderBy);
     }
 
     public Page<EventParticipationEntity> findAllPaginator(RepositoryFilter filter, Pageable pageable) {

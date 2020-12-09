@@ -15,8 +15,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "person", catalog = "grupowl", schema = "", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"created_at"}),
+@Table(name = "person", catalog = "grupowl", schema = "", uniqueConstraints = {    
     @UniqueConstraint(columnNames = {"id"})})
 
 public class PersonEntity implements Serializable {
@@ -82,7 +81,10 @@ public class PersonEntity implements Serializable {
             return false;
         }
         PersonEntity other = (PersonEntity) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override

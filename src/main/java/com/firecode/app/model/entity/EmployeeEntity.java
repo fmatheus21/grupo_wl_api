@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "employee", catalog = "grupowl", schema = "", uniqueConstraints = {
@@ -41,17 +42,19 @@ public class EmployeeEntity implements Serializable {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Size(min = 1, max = 2147483647)
+    @Column(name = "filter", nullable = false, length = 2147483647)
+    private String filter;
+
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "idEmployee")
     private EventParticipationEntity eventParticipationEntity;
 
     @JoinColumn(name = "id_person_physical", referencedColumnName = "id", nullable = false)
     @OneToOne(optional = false)
     private PersonPhysicalEntity idPersonPhysical;
-
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "filter", nullable = false, length = 2147483647)
-    private String filter;
 
     public EmployeeEntity() {
     }
@@ -84,6 +87,14 @@ public class EmployeeEntity implements Serializable {
         this.updatedAt = updatedAt;
     }
 
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
     public EventParticipationEntity getEventParticipationEntity() {
         return eventParticipationEntity;
     }
@@ -100,14 +111,6 @@ public class EmployeeEntity implements Serializable {
         this.idPersonPhysical = idPersonPhysical;
     }
 
-    public String getFilter() {
-        return filter;
-    }
-
-    public void setFilter(String filter) {
-        this.filter = filter;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -122,7 +125,10 @@ public class EmployeeEntity implements Serializable {
             return false;
         }
         EmployeeEntity other = (EmployeeEntity) object;
-        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+            return false;
+        }
+        return true;
     }
 
     @Override
