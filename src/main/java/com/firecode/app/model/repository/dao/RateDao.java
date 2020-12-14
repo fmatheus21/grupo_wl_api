@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
-public abstract class RateDao implements GenericDao<RateEntity> {
+@Component
+public class RateDao implements GenericDao<RateEntity> {
 
     @Autowired
     private RateRepository repository;
@@ -41,6 +43,10 @@ public abstract class RateDao implements GenericDao<RateEntity> {
 
     public Page<RateEntity> findAllPaginator(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public List<RateEntity> findByEmployee(boolean b) {
+        return repository.findByEmployee(b);
     }
 
 }

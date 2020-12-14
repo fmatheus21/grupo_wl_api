@@ -21,8 +21,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONObject;
 
-@JsonPropertyOrder({"id", "event_name", "event_date", "employee_name", "employee_drink", "employee_rate",
-    "guest_name", "guest_document", "guest_drink", "guest_rate", "employee_total", "guest_total", "grand_total"})
+@JsonPropertyOrder({"id", "event_name", "event_date", "employee_name", "employee_drink", "employee_rate", "id_guest",
+    "guest_name", "guest_document", "guest_drink", "guest_rate", "has_guest", "employee_total", "guest_total", "grand_total"})
 @JsonInclude(Include.NON_NULL)
 @Api(tags = "Employees", description = "Event Participation API")
 public class EventParticipationDto {
@@ -34,10 +34,9 @@ public class EventParticipationDto {
     private Integer id;
 
     @Getter
-    @Setter
-    @NotNull(message = "{idEvent.not.null}")
+    @Setter    
     @JsonProperty("id_event")
-    @ApiModelProperty(notes = "Event ID", name = "id_event", required = true)
+    @ApiModelProperty(notes = "Event ID", name = "id_event")
     private Integer idEvent;
 
     @Getter
@@ -70,13 +69,13 @@ public class EventParticipationDto {
     @Setter
     @JsonProperty("employee_rate")
     @ApiModelProperty(notes = "Rate employee", name = "employee_rate", required = true)
-    private String employeeRate;
+    private BigDecimal employeeRate;
 
     @Getter
     @Setter
     @JsonProperty("guest_rate")
     @ApiModelProperty(notes = "Rate guest", name = "guest_rate", required = true)
-    private String guestRate;
+    private BigDecimal guestRate;
 
     @Getter
     @Setter
@@ -132,6 +131,20 @@ public class EventParticipationDto {
     @ApiModelProperty(notes = "Total collected", name = "grand_total")
     private String grandTotal;
 
+    @Getter
+    @Setter
+    @JsonProperty("has_guest")
+    @ApiModelProperty(notes = "HasGuest", name = "has_guest")
+    private boolean hasGuest;
+    
+    @Getter
+    @Setter
+    @JsonProperty("id_guest")
+    @ApiModelProperty(notes = "Guest ID", name = "id_guest")
+    private int id_guest;
+    
+    
+
     public EventParticipationEntity create(EventParticipationDto dto, EmployeeEntity employee) {
 
         var eventParticipation = new EventParticipationEntity();
@@ -169,25 +182,25 @@ public class EventParticipationDto {
             dto.setEventName(eventParticipation.getIdEvent().getNameEvent());
             dto.setEventDate(LocalDatetUtil.converterLocalDateTimeToString(eventParticipation.getIdEvent().getDateEvent()));
             dto.setEmployeeName(eventParticipation.getIdEmployee().getIdPersonPhysical().getName());
-            dto.setEmployeeRate(NumberFormatUtil.formatMoney(eventParticipation.getIdRate().getValue(), 2, 2));
+            dto.setEmployeeRate(eventParticipation.getIdRate().getValue());
 
             if (eventParticipation.getIdRate().getId() == 1) {
-                dto.setEmployeeDrink("Yes");
+                dto.setEmployeeDrink("Sim");
             } else if (eventParticipation.getIdRate().getId() == 2) {
-                dto.setEmployeeDrink("No");
+                dto.setEmployeeDrink("Não");
             }
 
-            dto.setEmployeeRate(NumberFormatUtil.formatMoney(eventParticipation.getIdRate().getValue(), 2, 2));
-
             if (eventParticipation.getEventGuestEntity() != null) {
+                dto.setId_guest(eventParticipation.getEventGuestEntity().getId());
                 dto.setGuestName(eventParticipation.getEventGuestEntity().getNameGuest());
                 dto.setGuestDocument(eventParticipation.getEventGuestEntity().getDocument());
-                dto.setGuestRate(NumberFormatUtil.formatMoney(eventParticipation.getEventGuestEntity().getIdRate().getValue(), 2, 2));
+                dto.setGuestRate(eventParticipation.getEventGuestEntity().getIdRate().getValue());
+                dto.setHasGuest(true);
 
                 if (eventParticipation.getEventGuestEntity().getIdRate().getId() == 3) {
-                    dto.setGuestDrink("Yes");
+                    dto.setGuestDrink("Sim");
                 } else if (eventParticipation.getEventGuestEntity().getIdRate().getId() == 4) {
-                    dto.setGuestDrink("No");
+                    dto.setGuestDrink("Não");
                 }
 
             }

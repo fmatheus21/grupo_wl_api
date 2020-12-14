@@ -2,14 +2,16 @@ package com.firecode.app.controller.rule;
 
 import com.firecode.app.controller.dto.EventParticipationDto;
 import com.firecode.app.controller.event.ResourceEvent;
+import com.firecode.app.controller.util.AppUtil;
 import com.firecode.app.model.entity.EventParticipationEntity;
 import com.firecode.app.model.entity.EmployeeEntity;
+import com.firecode.app.model.entity.EventGuestEntity;
 import com.firecode.app.model.entity.RateEntity;
 import com.firecode.app.model.repository.filter.RepositoryFilter;
 import com.firecode.app.model.service.EventParticipationService;
 import com.firecode.app.model.service.EmployeeService;
+import com.firecode.app.model.service.EventGuestService;
 import com.firecode.app.model.service.RateService;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class EventParticipationRule {
 
     @Autowired
     private RateService rateService;
+
+    @Autowired
+    private EventGuestService eventGuestService;
 
     public ResponseEntity<?> create(EventParticipationDto dto, HttpServletResponse response) {
 
@@ -67,6 +72,18 @@ public class EventParticipationRule {
             }
         }
 
+        /* Verifica se o cpf do acompanhante ja existe */
+        if (dto.getGuestDocument() != null) {
+            EventGuestEntity guest = eventGuestService.findByDocument(AppUtil.removeSpecialCharacters(dto.getGuestDocument()));
+            if (guest != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.event.guest.exist", null));
+            }
+        }
+
+        if (employee == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.employee.not.found", null));
+        }
+
         var eventParticipationDto = new EventParticipationDto();
         var eventParticipation = eventParticipationDto.create(dto, employee);
         eventParticipationService.create(eventParticipation);
@@ -84,8 +101,6 @@ public class EventParticipationRule {
         if (eventParticipation == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageResponseRule.messageResponse(400, HttpStatus.BAD_REQUEST, "message.error.event.employee.exist", null));
         }
-
-        System.out.println("ID: " + eventParticipation.getId() + " - ID Employee: " + eventParticipation.getIdEmployee().getId());
 
         eventParticipationService.deleteById(eventParticipation.getId());
 

@@ -49,4 +49,8 @@ public class EventGuestDao implements GenericDao<EventGuestEntity> {
         return repository.findAll(pageable);
     }
 
+    public EventGuestEntity findByDocument(String value) {
+        return repository.findByDocument(value);
+    }
+
 }

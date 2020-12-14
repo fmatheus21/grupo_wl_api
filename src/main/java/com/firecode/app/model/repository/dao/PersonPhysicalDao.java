@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import com.firecode.app.model.repository.PersonPhysicalRepository;
+import org.springframework.stereotype.Component;
 
-public abstract class PersonPhysicalDao implements GenericDao<PersonPhysicalEntity> {
+@Component
+public class PersonPhysicalDao implements GenericDao<PersonPhysicalEntity> {
 
     @Autowired
     private PersonPhysicalRepository repository;

@@ -35,4 +35,8 @@ public class EventGuestService {
         return dao.findAll(pageable);
     }
 
+    public EventGuestEntity findByDocument(String value) {
+        return dao.findByDocument(value);
+    }
+
 }

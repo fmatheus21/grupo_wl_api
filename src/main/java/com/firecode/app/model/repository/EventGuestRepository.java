@@ -15,5 +15,8 @@ public interface EventGuestRepository extends JpaRepository<EventGuestEntity, In
     @Modifying
     @Query("delete from EventGuestEntity e where e.id=:id")
     public void deleteById(@Param("id") int id);
+    
+    public EventGuestEntity findByDocument(String value);
+    
 
 }

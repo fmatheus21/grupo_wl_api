@@ -49,7 +49,7 @@ public class SwaggerConfig {
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
-                .contact(new Contact("Fernando Matheus", "https://firecodesystems.com", "fernando.matheus@firecodesystems.com"))
+                .contact(new Contact("Fernando Matheus", "#", "fernando.matheuss@outlook.com"))
                 .build();
     }
 

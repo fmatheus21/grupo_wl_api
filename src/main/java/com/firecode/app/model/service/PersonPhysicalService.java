@@ -2,29 +2,29 @@ package com.firecode.app.model.service;
 
 import com.firecode.app.model.entity.PersonPhysicalEntity;
 import com.firecode.app.model.repository.dao.PersonPhysicalDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PersonPhysicalService extends PersonPhysicalDao {
+public class PersonPhysicalService {
 
-    @Override
+    @Autowired
+    private PersonPhysicalDao dao;
+
     public PersonPhysicalEntity create(PersonPhysicalEntity entity) {
-        return super.create(entity);
+        return dao.create(entity);
     }
 
-    @Override
     public PersonPhysicalEntity update(PersonPhysicalEntity entity) {
-        return super.update(entity);
+        return dao.update(entity);
     }
 
-    @Override
     public void deleteById(int id) {
-        super.deleteById(id);
+        dao.deleteById(id);
     }
 
-    @Override
     public PersonPhysicalEntity findByDocument(String value) {
-        return super.findByDocument(value);
+        return dao.findByDocument(value);
     }
 
 }
